@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Environment variables
+.env
+
+# Generated HTML & JSON reports
+reports/
+
+# Testing & linting
+.pytest_cache/
+.ruff_cache/
+.coverage
+
+# OS
+.DS_Store

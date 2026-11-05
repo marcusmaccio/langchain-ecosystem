@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lca-two-agents"
+version = "0.1.0"
+description = "Two-agent pure LangChain pipeline reusing BTA from lca-single-agent + Accounting Agent (AA)"
+readme = "README.md"
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "lca-single-agent",
+    "langchain>=1.0.0,<2.0",
+    "langchain-core>=1.3.0,<2.0",
+    "langchain-anthropic",
+    "langchain-openai",
+    "langchain-google-genai",
+    "langchain-ollama",
+    "pypdf>=6.21.4",
+    "python-dotenv",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.15.0",
+]
+
+[tool.setuptools]
+packages = ["lca_two_agents"]
+
+[tool.setuptools.package-dir]
+lca_two_agents = "src"
+
+[tool.uv]
+package = true
+
+[tool.uv.sources]
+lca-single-agent = { path = "../lca-single-agent", editable = true }
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.ruff]
+lint.select = ["E", "F", "I", "UP"]
+lint.ignore = ["E501"]

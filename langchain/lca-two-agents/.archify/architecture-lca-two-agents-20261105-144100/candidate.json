@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Stage 2: Two Agents in Pure LangChain (lca-two-agents)",
+    "output": ".archify/architecture-lca-two-agents-20261105-144100/lca-two-agents.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "pdfs",
+      "type": "external",
+      "label": "Bank PDF Folder",
+      "sublabel": "Migros Statements",
+      "pos": [40, 240],
+      "size": [145, 64]
+    },
+    {
+      "id": "bta",
+      "type": "backend",
+      "label": "Agent 1: BTA",
+      "sublabel": "from lca_single_agent",
+      "tag": "Reused Package",
+      "pos": [290, 240],
+      "size": [155, 64]
+    },
+    {
+      "id": "tx_json",
+      "type": "database",
+      "label": "Transactions JSON",
+      "sublabel": "transactions.json",
+      "pos": [290, 410],
+      "size": [155, 64]
+    },
+    {
+      "id": "handoff_tool",
+      "type": "messagebus",
+      "label": "Handoff Tool",
+      "sublabel": "notify_accounting_agent",
+      "tag": "extra_tools",
+      "pos": [550, 240],
+      "size": [165, 64]
+    },
+    {
+      "id": "aa",
+      "type": "backend",
+      "label": "Agent 2: AA",
+      "sublabel": "Accounting Agent",
+      "tag": "Balance Logic",
+      "pos": [820, 240],
+      "size": [155, 64]
+    },
+    {
+      "id": "lm_studio",
+      "type": "external",
+      "label": "LM Studio LLM",
+      "sublabel": "Qwen 3.8 27B MLX",
+      "pos": [820, 70],
+      "size": [155, 64]
+    },
+    {
+      "id": "balance_out",
+      "type": "frontend",
+      "label": "Expandable Balance",
+      "sublabel": "balance.html & .json",
+      "pos": [820, 410],
+      "size": [155, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "lca-two-agents Pipeline (Editable Reuse + Handoff)",
+      "wraps": ["bta", "tx_json", "handoff_tool", "aa", "balance_out"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "pdfs-to-bta",
+      "from": "pdfs",
+      "to": "bta",
+      "label": "read PDFs",
+      "variant": "emphasis"
+    },
+    {
+      "id": "bta-to-json",
+      "from": "bta",
+      "to": "tx_json",
+      "label": "deliver JSON",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "bta-to-handoff",
+      "from": "bta",
+      "to": "handoff_tool",
+      "label": "trigger AA",
+      "variant": "emphasis"
+    },
+    {
+      "id": "handoff-to-aa",
+      "from": "handoff_tool",
+      "to": "aa",
+      "label": "invoke AA",
+      "variant": "emphasis"
+    },
+    {
+      "id": "json-to-aa",
+      "from": "tx_json",
+      "to": "aa",
+      "label": "read JSON",
+      "variant": "dashed"
+    },
+    {
+      "id": "aa-to-llm",
+      "from": "aa",
+      "to": "lm_studio",
+      "label": "OpenAI API",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "aa-to-balance",
+      "from": "aa",
+      "to": "balance_out",
+      "label": "render Balance",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Zero Code Duplication",
+      "items": [
+        "Imports lca_single_agent as an editable uv dependency",
+        "Supports standalone runs (--bta-only, --aa-only) or combined pipeline"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Agent-to-Agent Handoff Tool",
+      "items": [
+        "Injects notify_accounting_agent into BTA via extra_tools",
+        "Whenever BTA parses a new PDF in 15m watch mode, it triggers AA"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Balance per Bank & Account",
+      "items": [
+        "Splits transactions into Incoming (+) and Expenses (-)",
+        "Renders expandable <details> sections per Bank and Bank Account / IBAN"
+      ]
+    }
+  ]
+}

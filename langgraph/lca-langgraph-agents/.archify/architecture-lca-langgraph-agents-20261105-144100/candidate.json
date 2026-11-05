@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Stage 3: LangGraph StateGraph Workflow (lca-langgraph-agents)",
+    "output": ".archify/architecture-lca-langgraph-agents-20261105-144100/lca-langgraph-agents.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "discover_node",
+      "type": "messagebus",
+      "label": "discover_files",
+      "sublabel": "Gatekeeper Node",
+      "tag": "START",
+      "pos": [40, 240],
+      "size": [150, 64]
+    },
+    {
+      "id": "end_skip",
+      "type": "external",
+      "label": "__end__ (Skip)",
+      "sublabel": "No New PDFs Found",
+      "pos": [40, 420],
+      "size": [150, 64]
+    },
+    {
+      "id": "bta_node",
+      "type": "backend",
+      "label": "bta_node (BTA)",
+      "sublabel": "lca_single_agent",
+      "tag": "Pure Agent",
+      "pos": [310, 240],
+      "size": [155, 64]
+    },
+    {
+      "id": "tx_json",
+      "type": "database",
+      "label": "transactions.json",
+      "sublabel": "Shared Artifact",
+      "pos": [310, 420],
+      "size": [155, 64]
+    },
+    {
+      "id": "aa_node",
+      "type": "backend",
+      "label": "aa_node (AA)",
+      "sublabel": "lca_two_agents",
+      "tag": "Pure Agent",
+      "pos": [590, 240],
+      "size": [155, 64]
+    },
+    {
+      "id": "balance_html",
+      "type": "frontend",
+      "label": "balance.html",
+      "sublabel": "Expandable Balance",
+      "pos": [590, 420],
+      "size": [155, 64]
+    },
+    {
+      "id": "state_store",
+      "type": "cloud",
+      "label": "WorkflowState",
+      "sublabel": "TypedDict + Reducers",
+      "tag": "StateGraph",
+      "pos": [450, 70],
+      "size": [165, 64]
+    },
+    {
+      "id": "end_done",
+      "type": "external",
+      "label": "__end__ (Done)",
+      "sublabel": "Workflow Complete",
+      "pos": [850, 240],
+      "size": [145, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Compiled LangGraph StateGraph (build_bta_aa_graph)",
+      "wraps": ["discover_node", "bta_node", "aa_node", "state_store"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "discover-to-skip",
+      "from": "discover_node",
+      "to": "end_skip",
+      "label": "no new files",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "discover-to-bta",
+      "from": "discover_node",
+      "to": "bta_node",
+      "label": "should_process",
+      "variant": "emphasis"
+    },
+    {
+      "id": "bta-to-tx",
+      "from": "bta_node",
+      "to": "tx_json",
+      "label": "write JSON",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "bta-to-aa",
+      "from": "bta_node",
+      "to": "aa_node",
+      "label": "route_after_bta",
+      "variant": "emphasis"
+    },
+    {
+      "id": "aa-to-balance",
+      "from": "aa_node",
+      "to": "balance_html",
+      "label": "write HTML",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "aa-to-end",
+      "from": "aa_node",
+      "to": "end_done",
+      "label": "complete",
+      "variant": "emphasis"
+    },
+    {
+      "id": "state-to-bta",
+      "from": "state_store",
+      "to": "bta_node",
+      "label": "read/write state",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "state-to-aa",
+      "from": "state_store",
+      "to": "aa_node",
+      "label": "append steps",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Declarative Graph Routing",
+      "items": [
+        "Decouples workflow orchestration from individual agent toolsets",
+        "BTA runs in pure standalone mode (extra_tools=None) inside bta_node"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Conditional Short-Circuiting",
+      "items": [
+        "route_after_discovery transitions directly to __end__ if no new PDFs exist",
+        "Zero LLM tokens spent during idle 15-minute watch intervals"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Typed State & Reducers",
+      "items": [
+        "WorkflowState tracks file paths, flags, and agent responses",
+        "workflow_steps uses operator.add reducer for an append-only execution trace"
+      ]
+    }
+  ]
+}

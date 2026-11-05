@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Layer 3: DeepAgents Bank Reconciliation Harness (deep-agents-example)",
+    "output": ".archify/architecture-deep-agents-example-20261105-144100/deep-agents-example.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "feed_csv",
+      "type": "external",
+      "label": "Bank Feed CSV",
+      "sublabel": "test_feed.csv",
+      "pos": [40, 240],
+      "size": [145, 64]
+    },
+    {
+      "id": "orchestrator",
+      "type": "cloud",
+      "label": "DeepAgents Harness",
+      "sublabel": "Supervisor & Planner",
+      "tag": "deepagents",
+      "pos": [290, 240],
+      "size": [160, 64]
+    },
+    {
+      "id": "ingestion_agent",
+      "type": "backend",
+      "label": "Ingestion Subagent",
+      "sublabel": "Normalize & Validate",
+      "pos": [560, 80],
+      "size": [160, 64]
+    },
+    {
+      "id": "recon_agent",
+      "type": "backend",
+      "label": "Reconciliation Agent",
+      "sublabel": "Match & Classify",
+      "pos": [560, 240],
+      "size": [160, 64]
+    },
+    {
+      "id": "audit_agent",
+      "type": "security",
+      "label": "Audit & Report Agent",
+      "sublabel": "Compliance & Summary",
+      "pos": [560, 400],
+      "size": [160, 64]
+    },
+    {
+      "id": "sqlite_db",
+      "type": "database",
+      "label": "Reconciliation DB",
+      "sublabel": "bank_reconciliation.db",
+      "pos": [830, 240],
+      "size": [160, 64]
+    },
+    {
+      "id": "reports_out",
+      "type": "frontend",
+      "label": "Audit Reports",
+      "sublabel": "reports/ HTML & MD",
+      "pos": [830, 400],
+      "size": [160, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "DeepAgents Autonomous Subagent Workspace",
+      "wraps": ["orchestrator", "ingestion_agent", "recon_agent", "audit_agent", "sqlite_db", "reports_out"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "csv-to-orch",
+      "from": "feed_csv",
+      "to": "orchestrator",
+      "label": "input feed",
+      "variant": "emphasis"
+    },
+    {
+      "id": "orch-to-ingest",
+      "from": "orchestrator",
+      "to": "ingestion_agent",
+      "label": "delegate task",
+      "fromSide": "top",
+      "toSide": "left"
+    },
+    {
+      "id": "orch-to-recon",
+      "from": "orchestrator",
+      "to": "recon_agent",
+      "label": "delegate match",
+      "variant": "emphasis"
+    },
+    {
+      "id": "orch-to-audit",
+      "from": "orchestrator",
+      "to": "audit_agent",
+      "label": "delegate audit",
+      "fromSide": "bottom",
+      "toSide": "left"
+    },
+    {
+      "id": "ingest-to-db",
+      "from": "ingestion_agent",
+      "to": "sqlite_db",
+      "label": "insert rows",
+      "fromSide": "right",
+      "toSide": "top"
+    },
+    {
+      "id": "recon-to-db",
+      "from": "recon_agent",
+      "to": "sqlite_db",
+      "label": "reconcile SQL",
+      "variant": "emphasis"
+    },
+    {
+      "id": "audit-to-reports",
+      "from": "audit_agent",
+      "to": "reports_out",
+      "label": "generate report",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Autonomous Task Planning",
+      "items": [
+        "DeepAgents supervisor breaks complex goals into structured todo steps",
+        "Delegates specialized tasks to isolated subagents"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "SQLite Persistence & Audit",
+      "items": [
+        "Persists normalized feeds and reconciliation matches in SQLite",
+        "Produces human-readable compliance and exception reports"
+      ]
+    }
+  ]
+}

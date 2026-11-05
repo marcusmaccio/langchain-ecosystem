@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Stage 1: Bank Transaction Agent (lca-single-agent)",
+    "output": ".archify/architecture-lca-single-agent-20261105-144100/lca-single-agent.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "cli_watcher",
+      "type": "frontend",
+      "label": "CLI & 15m Watcher",
+      "sublabel": "main.py (--watch)",
+      "pos": [40, 240],
+      "size": [150, 64]
+    },
+    {
+      "id": "bta_agent",
+      "type": "backend",
+      "label": "BTA Agent",
+      "sublabel": "build_single_agent()",
+      "tag": "Standalone",
+      "pos": [300, 240],
+      "size": [150, 64]
+    },
+    {
+      "id": "lm_studio",
+      "type": "external",
+      "label": "LM Studio LLM",
+      "sublabel": "Qwen 3.8 27B MLX",
+      "pos": [300, 70],
+      "size": [150, 64]
+    },
+    {
+      "id": "pdf_tools",
+      "type": "backend",
+      "label": "PDF Reader Tools",
+      "sublabel": "list & read PDFs",
+      "pos": [560, 240],
+      "size": [150, 64]
+    },
+    {
+      "id": "pdf_folder",
+      "type": "external",
+      "label": "Bank PDF Folder",
+      "sublabel": "Migros Statements",
+      "pos": [560, 70],
+      "size": [150, 64]
+    },
+    {
+      "id": "report_tool",
+      "type": "backend",
+      "label": "Dedupe & Renderer",
+      "sublabel": "Account Sets & Counters",
+      "pos": [560, 410],
+      "size": [155, 64]
+    },
+    {
+      "id": "tx_json",
+      "type": "database",
+      "label": "Transactions JSON",
+      "sublabel": "transactions.json",
+      "pos": [300, 410],
+      "size": [150, 64]
+    },
+    {
+      "id": "tx_html",
+      "type": "frontend",
+      "label": "Expandable Report",
+      "sublabel": "transactions.html",
+      "pos": [825, 410],
+      "size": [150, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "lca_single_agent Package Boundary",
+      "wraps": ["cli_watcher", "bta_agent", "pdf_tools", "report_tool", "tx_json", "tx_html"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "cli-to-bta",
+      "from": "cli_watcher",
+      "to": "bta_agent",
+      "label": "invoke",
+      "variant": "emphasis"
+    },
+    {
+      "id": "bta-to-llm",
+      "from": "bta_agent",
+      "to": "lm_studio",
+      "label": "ReAct loop",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "bta-to-pdf-tools",
+      "from": "bta_agent",
+      "to": "pdf_tools",
+      "label": "tool calls",
+      "variant": "emphasis"
+    },
+    {
+      "id": "pdf-tools-to-folder",
+      "from": "pdf_tools",
+      "to": "pdf_folder",
+      "label": "pypdf read",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "pdf-tools-to-report",
+      "from": "pdf_tools",
+      "to": "report_tool",
+      "label": "extracted items",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "report-to-json",
+      "from": "report_tool",
+      "to": "tx_json",
+      "label": "save cache"
+    },
+    {
+      "id": "report-to-html",
+      "from": "report_tool",
+      "to": "tx_html",
+      "label": "render HTML",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Pure Standalone Agent",
+      "items": [
+        "build_single_agent(extra_tools=None) runs with only 3 core BTA tools",
+        "Identifies Bank Name and Bank Account / IBAN from PDF headers"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Deterministic Counters & Deduplication",
+      "items": [
+        "Composite deduplication key preserves same-day transfers with distinct references",
+        "Tracks total_files_read, start_date, end_date, raw vs unique counts"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "15-Minute Incremental Watcher",
+      "items": [
+        "Compares folder PDFs against summary.read_files in transactions.json",
+        "Parses only newly added PDF files and merges with cached state"
+      ]
+    }
+  ]
+}

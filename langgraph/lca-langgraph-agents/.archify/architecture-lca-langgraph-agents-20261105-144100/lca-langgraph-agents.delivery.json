@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "6df8b376-1742-4909-b7fa-c31c6df12d8c",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/marcomaccio/Documents/development/personal/langchain-ecosystem/langgraph/lca-langgraph-agents/.archify/architecture-lca-langgraph-agents-20261105-144100/candidate.json",
+  "output": "/Users/marcomaccio/Documents/development/personal/langchain-ecosystem/langgraph/lca-langgraph-agents/.archify/architecture-lca-langgraph-agents-20261105-144100/lca-langgraph-agents.html",
+  "specification": {
+    "sha256": "4d894e1005d8a7d1e4d97af966b372816fda40f05d44ecd6f956059e48d0a1b8",
+    "bytes": 4310
+  },
+  "artifact": {
+    "sha256": "ebc99f755d547bc6e28106f213221993f659142f4c3a7c78aed87729f456330f",
+    "bytes": 762036
+  }
+}

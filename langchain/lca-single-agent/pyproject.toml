@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lca-single-agent"
+version = "0.1.0"
+description = "Experimenting with single agents using pure LangChain"
+readme = "README.md"
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "langchain>=1.0.0,<2.0",
+    "langchain-core>=1.3.0,<2.0",
+    "langchain-anthropic",
+    "langchain-openai",
+    "langchain-google-genai",
+    "langchain-ollama",
+    "python-dotenv",
+    "pypdf>=6.21.4",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.15.0",
+]
+
+[tool.setuptools]
+packages = ["lca_single_agent"]
+
+[tool.setuptools.package-dir]
+lca_single_agent = "src"
+
+[tool.uv]
+package = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.ruff]
+lint.select = ["E", "F", "I", "UP"]
+lint.ignore = ["E501"]

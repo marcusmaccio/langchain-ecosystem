@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "LangChain Ecosystem Architecture (Stages 1-3 & DeepAgents)",
+    "output": ".archify/architecture-langchain-ecosystem-20261105-144100/langchain-ecosystem.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "pdfs",
+      "type": "external",
+      "label": "Bank PDFs",
+      "sublabel": "Migros Statements",
+      "pos": [40, 260],
+      "size": [145, 64]
+    },
+    {
+      "id": "bta",
+      "type": "backend",
+      "label": "Stage 1: BTA",
+      "sublabel": "lca-single-agent",
+      "tag": "LangChain v1",
+      "pos": [290, 260],
+      "size": [150, 64]
+    },
+    {
+      "id": "tx_store",
+      "type": "database",
+      "label": "Transactions Store",
+      "sublabel": "transactions.json",
+      "pos": [290, 430],
+      "size": [150, 64]
+    },
+    {
+      "id": "aa",
+      "type": "backend",
+      "label": "Stage 2: AA",
+      "sublabel": "lca-two-agents",
+      "tag": "Accounting",
+      "pos": [550, 260],
+      "size": [150, 64]
+    },
+    {
+      "id": "bal_store",
+      "type": "frontend",
+      "label": "Balance Sheet",
+      "sublabel": "balance.html / json",
+      "pos": [550, 430],
+      "size": [150, 64]
+    },
+    {
+      "id": "langgraph",
+      "type": "messagebus",
+      "label": "Stage 3: StateGraph",
+      "sublabel": "lca-langgraph-agents",
+      "tag": "LangGraph",
+      "pos": [420, 80],
+      "size": [160, 64]
+    },
+    {
+      "id": "deepagents",
+      "type": "cloud",
+      "label": "Layer 3: DeepAgents",
+      "sublabel": "deep-agents-example",
+      "tag": "Harness",
+      "pos": [810, 80],
+      "size": [160, 64]
+    },
+    {
+      "id": "lm_studio",
+      "type": "external",
+      "label": "LM Studio Server",
+      "sublabel": "Qwen 3.8 27B MLX",
+      "tag": "localhost:1234",
+      "pos": [810, 260],
+      "size": [160, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "LangChain Ecosystem Workspace (langchain-ecosystem)",
+      "wraps": ["bta", "tx_store", "aa", "bal_store", "langgraph", "deepagents"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "pdfs-to-bta",
+      "from": "pdfs",
+      "to": "bta",
+      "label": "read PDFs",
+      "variant": "emphasis"
+    },
+    {
+      "id": "bta-to-tx",
+      "from": "bta",
+      "to": "tx_store",
+      "label": "write JSON",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "bta-to-aa",
+      "from": "bta",
+      "to": "aa",
+      "label": "handoff",
+      "variant": "emphasis"
+    },
+    {
+      "id": "aa-to-bal",
+      "from": "aa",
+      "to": "bal_store",
+      "label": "render HTML",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "lg-to-bta",
+      "from": "langgraph",
+      "to": "bta",
+      "label": "bta_node",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "lg-to-aa",
+      "from": "langgraph",
+      "to": "aa",
+      "label": "aa_node",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "da-to-lg",
+      "from": "deepagents",
+      "to": "langgraph",
+      "label": "built on",
+      "variant": "dashed"
+    },
+    {
+      "id": "aa-to-llm",
+      "from": "aa",
+      "to": "lm_studio",
+      "label": "OpenAI API"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Layer 1: Pure LangChain (Stages 1 & 2)",
+      "items": [
+        "Stage 1 (lca-single-agent): Standalone Bank Transaction Agent (BTA) with PDF extraction and deduplication",
+        "Stage 2 (lca-two-agents): Reuses BTA as an editable package and adds Accounting Agent (AA) with Balance per Bank & Account"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Layer 2: LangGraph StateGraph (Stage 3)",
+      "items": [
+        "Declarative StateGraph (discover_files -> bta_node -> aa_node) separating agent logic from routing",
+        "Short-circuits to END during 15-minute watch cycles when no new PDFs arrive"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Layer 3: DeepAgents & Local Inference",
+      "items": [
+        "DeepAgents builds autonomous planning and subagent delegation on top of LangGraph",
+        "Powered locally by LM Studio serving Qwen 3.8 27B MLX on Apple Silicon"
+      ]
+    }
+  ]
+}

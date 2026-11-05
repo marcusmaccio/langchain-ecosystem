@@ -1,0 +1,26 @@
+[project]
+name = "deep-agents-financial-pipeline"
+version = "0.1.0"
+description = "Local Multi-Agent Financial Ingestion, Reconciliation & Dispatch Pipeline"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "langchain-core>=0.3.0",
+    "langchain-openai>=0.2.0",
+    "langgraph>=0.2.0",
+    "pydantic>=2.0.0",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "pypdf>=5.0.0",
+    "requests>=2.28.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-mock>=3.14.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+

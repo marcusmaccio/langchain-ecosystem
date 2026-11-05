@@ -1,0 +1,28 @@
+# Virtual environments & caches
+.venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+**/.pytest_cache/
+.ruff_cache/
+**/.ruff_cache/
+*.egg-info/
+**/*.egg-info/
+node_modules/
+**/node_modules/
+
+# Environment variables, generated financial reports & OS files
+.env
+**/.env
+reports/
+**/reports/
+.DS_Store
+**/.DS_Store
+
+# Agent skill binaries cache (re-creatable)
+.agents/
+
+# External cloned course repo
+deepagents/lca-deepagents/

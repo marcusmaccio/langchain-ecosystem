@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "72ad51bf-a4a2-4d0b-be69-0f097cbf19fc",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/marcomaccio/Documents/development/personal/langchain-ecosystem/langchain/lca-single-agent/.archify/architecture-lca-single-agent-20261105-144100/candidate.json",
+  "output": "/Users/marcomaccio/Documents/development/personal/langchain-ecosystem/langchain/lca-single-agent/.archify/architecture-lca-single-agent-20261105-144100/lca-single-agent.html",
+  "specification": {
+    "sha256": "a1da36d14bb120279626f05dddface5f434e2f7c489abbf5033a10e7846a8fb4",
+    "bytes": 3971
+  },
+  "artifact": {
+    "sha256": "702ac539fe69781beb482ab72032742e3b8215d11c1724c7585d929d90afa1a8",
+    "bytes": 759536
+  }
+}

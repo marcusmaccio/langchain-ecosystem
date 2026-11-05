@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lca-langgraph-workflow"
+version = "0.1.0"
+description = "LangGraph StateGraph workflow coordinating the Bank Transaction Agent (BTA) and Accounting Agent (AA)"
+readme = "README.md"
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "lca-single-agent",
+    "lca-two-agents",
+    "langgraph>=1.0.0,<2.0",
+    "langchain>=1.0.0,<2.0",
+    "langchain-core>=1.3.0,<2.0",
+    "python-dotenv",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.15.0",
+]
+
+[tool.setuptools]
+packages = ["lca_langgraph"]
+
+[tool.setuptools.package-dir]
+lca_langgraph = "src"
+
+[tool.uv]
+package = true
+
+[tool.uv.sources]
+lca-single-agent = { path = "../../langchain/lca-single-agent", editable = true }
+lca-two-agents = { path = "../../langchain/lca-two-agents", editable = true }
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.ruff]
+lint.select = ["E", "F", "I", "UP"]
+lint.ignore = ["E501"]
