@@ -9,6 +9,7 @@ Welcome to the centralized **`docs/`** directory for **`langchain-ecosystem`**. 
 ```text
 docs/
 ├── README.md                                  # Documentation Hub & 3-Layer Ecosystem Guide (this file)
+├── prompts-2026-11-05.md                      # Chronological log of all user prompts asked on 2026-11-05
 ├── langchain-ecosystem-architecture.html      # Interactive Archify Diagram — Global Ecosystem
 ├── langchain/                                 # Layer 1: Pure LangChain v1.x Agents & Tools
 │   ├── lca-single-agent/
