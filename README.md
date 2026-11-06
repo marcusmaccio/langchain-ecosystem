@@ -49,7 +49,32 @@ langchain-ecosystem/
 
 ---
 
-## Quick Start Across Stages 1 $\rightarrow$ 3
+## Starting, Checking & Stopping the Agentic System
+
+Root lifecycle scripts (`start.sh`, `status.sh`, `stop.sh`) are provided in [`langchain-ecosystem/`](.) to manage the 15-minute background watcher (defaulting to **Stage 3: LangGraph `StateGraph`** on your Migros Bank folder):
+
+```bash
+cd /Users/marcomaccio/Documents/development/personal/langchain-ecosystem
+
+# Start the background 15-minute watcher (defaults to Stage 3 LangGraph; writes PID to .agent-watcher.pid and logs to logs/agent-watcher.log)
+./start.sh
+
+# Or start a specific stage (1 = Standalone BTA, 2 = Two Agents, 3 = LangGraph) or custom interval:
+./start.sh --stage 1 --interval 15
+
+# Or run once in the foreground without backgrounding:
+./start.sh --once
+
+# Check if the watcher is RUNNING or STOPPED and inspect recent log output:
+./status.sh
+
+# Stop the background watcher cleanly:
+./stop.sh
+```
+
+---
+
+## Quick Start Across Stages 1 $\rightarrow$ 3 (Direct CLI)
 
 ```bash
 # Stage 1 — Single Agent (BTA Standalone)

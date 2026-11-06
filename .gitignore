@@ -13,11 +13,13 @@ __pycache__/
 node_modules/
 **/node_modules/
 
-# Environment variables, generated financial reports & OS files
+# Environment variables, generated financial reports, runtime PID/logs & OS files
 .env
 **/.env
 reports/
 **/reports/
+logs/
+.agent-watcher.pid
 .DS_Store
 **/.DS_Store
 
