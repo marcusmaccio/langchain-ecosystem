@@ -12,9 +12,11 @@ fi
 PID="$(cat "$PID_FILE")"
 if kill -0 "$PID" 2>/dev/null; then
   echo "Stopping agent watcher (PID: $PID)..."
+  pkill -P "$PID" 2>/dev/null || true
   kill "$PID" 2>/dev/null || true
   sleep 1
   if kill -0 "$PID" 2>/dev/null; then
+    pkill -9 -P "$PID" 2>/dev/null || true
     kill -9 "$PID" 2>/dev/null || true
   fi
   echo "Agent watcher stopped."
